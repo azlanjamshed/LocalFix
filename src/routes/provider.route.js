@@ -3,18 +3,22 @@ const router = express.Router();
 
 const { isAuthenticated } = require("../middleware/auth.middleware");
 const { authorizeRoles } = require("../middleware/role.middleware");
+const { upsertProviderProfile, getMyProviderProfile } = require("../controller/provider.controller");
 
-router.get(
-    "/dashboard",
+// Create / Update profile
+router.post(
+    "/profile",
     isAuthenticated,
-    authorizeRoles("provider", "admin"),
-    (req, res) => {
-        res.json({
-            success: true,
-            message: "Welcome to provider dashboard",
-            provider: req.user,
-        });
-    }
+    authorizeRoles("provider"),
+    upsertProviderProfile
+);
+
+// Get own profile
+router.get(
+    "/profile/me",
+    isAuthenticated,
+    authorizeRoles("provider"),
+    getMyProviderProfile
 );
 
 module.exports = router;
