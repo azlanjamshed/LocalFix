@@ -4,6 +4,8 @@ const cookieParser = require("cookie-parser");
 const authRoutes = require("../src/routes/auth.route")
 const testRoutes = require("../src/routes/test.route")
 const providerRoutes = require("../src/routes/provider.route")
+const searchRoutes = require("../src/routes/search.route")
+const bookingRoutes = require("./routes/booking.route")
 const app = express();
 
 app.use(cors({
@@ -15,6 +17,8 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/test", testRoutes);
 app.use("/api/provider", providerRoutes);
+app.use("/api/search", searchRoutes);
+app.use("/api/bookings", bookingRoutes);
 app.get("/", (req, res) => {
     res.send("🚀 LocalFix API running");
 });

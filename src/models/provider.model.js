@@ -35,6 +35,18 @@ const providerSchema = new mongoose.Schema(
                 },
             },
         ],
+        location: {
+            type: {
+                type: String,
+                enum: ["Point"],
+                default: "Point",
+            },
+            coordinates: {
+                type: [Number], // [lng, lat]
+                required: true,
+            },
+            address: String,
+        },
 
         rating: {
             type: Number,
@@ -53,5 +65,6 @@ const providerSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
+providerSchema.index({ location: "2dsphere" });
 
 module.exports = mongoose.model("Provider", providerSchema);

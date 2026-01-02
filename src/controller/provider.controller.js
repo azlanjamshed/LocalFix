@@ -3,28 +3,56 @@ const Provider = require("../models/provider.model");
 
 
 // 🔹 Create or Update Provider Profile
+// upsertProviderProfile = async (req, res) => {
+//     try {
+//         const provider = await Provider.findOneAndUpdate(
+//             { userId: req.user._id },
+//             {
+//                 userId: req.user._id,
+//                 services: req.body.services,
+//                 availability: req.body.availability,
+//             },
+//             { new: true, upsert: true }
+//         );
+
+//         res.status(200).json({
+//             success: true,
+//             message: "Provider profile saved successfully",
+//             provider,
+//         });
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// };
 upsertProviderProfile = async (req, res) => {
     try {
+        const { services, availability, location } = req.body;
+
+        if (!location || !location.coordinates || location.coordinates.length !== 2) {
+            return res.status(400).json({
+                message: "Valid location coordinates are required"
+            });
+        }
+
         const provider = await Provider.findOneAndUpdate(
             { userId: req.user._id },
             {
                 userId: req.user._id,
-                services: req.body.services,
-                availability: req.body.availability,
+                services,
+                availability,
+                location,
             },
             { new: true, upsert: true }
         );
 
-        res.status(200).json({
+        res.json({
             success: true,
-            message: "Provider profile saved successfully",
             provider,
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
-
 // 🔹 Get Provider Profile (self)
 getMyProviderProfile = async (req, res) => {
     try {
